@@ -1,7 +1,7 @@
 @import '../colors.css';
 
 /* === Derived dynamic colors === */
-@define-color base alpha(@surface, 0.5);                      /* translucent blurred base */
+@define-color base alpha(@surface, 1.0);                      /* translucent blurred base */
 @define-color surface_custom alpha(@surface_container_high,0.8);
 @define-color hovercolor alpha(@surface_container_high,0.8);
 @define-color activecolor @primary_container;
@@ -19,7 +19,7 @@
   font-size: 1rem;
   font-weight: 900;
   all: unset;
-  font-family: "Fira Sans Semibold", "Font Awesome 7 Free", "Font Awesome 7 Brands", "Font Awesome 6 Free", "Font Awesome 6 Brands", FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+  font-family: "FiraCode Nerd Font", "Font Awesome 7 Free", "Font Awesome 7 Brands", "Font Awesome 6 Free", "Font Awesome 6 Brands", FontAwesome, Roboto, Helvetica, Arial, sans-serif;
   transition: 200ms;
 }
 
@@ -33,11 +33,26 @@
   padding: 0px;
 }
 
+.floating-notifications.background .notification-row .notification-background .notification {
+    background-color: @surface;
+    border-radius: 12px;
+    border: 2px solid @inverse_surface;	
+    opacity:1.0;
+    margin:10px;
+    margin-right:18px;
+    box-shadow: 1 1 5 1px @shadow;
+}
+
 .floating-notifications.background .notification-row .notification-background .notification.critical {
-  background: @base;       /* translucent blur */
-  border-radius: 10px;
-  border: 2px solid @primary;
-  margin: 5px 10px;
+    background-color: @surface;
+    border-radius: 12px;
+    background: radial-gradient(circle at 50% 250%, @primary, @surface) padding-box,
+        linear-gradient(#FFFFFF,@on_primary) border-box;
+    border: 2px solid transparent;	
+    opacity:1.0;
+    margin:10px;
+    margin-right:18px;
+    box-shadow: 1 1 5 1px @shadow;
 }
 
 .floating-notifications.background
@@ -67,7 +82,7 @@
   border-radius: 0.5rem;
   background-color: alpha(@crust, 0.95);
   margin: 0.4rem;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
 }
 
 .floating-notifications.background
@@ -78,7 +93,7 @@
   > *
   .notification-action:hover {
   background-color: @hover;
-  border: 1px solid @primary;
+  border: 3px solid @primary;
 }
 
 .floating-notifications.background
