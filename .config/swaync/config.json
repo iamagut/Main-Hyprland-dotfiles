@@ -1,0 +1,50 @@
+{
+    "positionX": "right",
+    "positionY": "top",
+    "layer": "overlay",
+    "control-center-layer": "top",
+    "layer-shell": true,
+    "cssPriority": "user",
+    "timeout": 7,
+    "control-center-width": 500,
+    "notification-window-width": 500,
+    "keyboard-shortcuts": true,
+    "image-visibility": "when-available",
+    "hide-on-clear": false,
+
+    "widgets": [
+        "title",
+        "inhibitors",
+        "dnd",
+        "mpris",
+        "notifications"
+    ],
+
+    "widget-config": {
+        "title": {
+            "text": "Notifications",
+            "clear-all-button": true,
+            "button-text": "Clear All"
+        },
+        "dnd": {
+            "text": "Do Not Disturb"
+        },
+        "notifications": { 
+            "vexpand": true 
+        }
+    },
+
+    "notification-icon-list": [
+        "title",
+        "app-icon",
+        "summary",
+        "body",
+        "image",
+        "hints",
+        "action-area"
+    ],
+
+    "mpris": {
+      "autohide": true
+    }
+}

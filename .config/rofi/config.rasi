@@ -1,0 +1,139 @@
+@theme "~/.config/rofi/colors.rasi"
+
+* {
+    font:                       "FiraCode Nerd Font Mono 12";
+    background-color:           transparent;
+    text-color:                 @on-surface;
+    margin:                     0px;
+    padding:                    0px;
+    spacing:                    0px;
+}
+
+configuration {
+    modi:                        "drun,filebrowser,window,run";
+    show-icons:                  true;
+    show-icons:                  true;
+    display-drun:                "";
+    display-run:                 " ";
+    display-filebrowser:         "";
+    display-window:              "";
+    window-format:               "{w} · {c} · {t}";
+	drun-display-format:         "{name}";
+    hover-select:                true;
+    background-color:            transparent;
+    text-color:                  @on-surface;
+}
+
+window {
+    transparency:                "real";
+    fullscreen:                  false;
+    enabled:                     true;
+    cursor:                      "default";
+    spacing:                     0em;
+    padding:                     0em;
+    border-radius:               24px;
+    background-color:            @background;
+    border-color:                @on-surface;
+    border:                      2px;
+}
+
+mainbox {
+    padding:    12px;
+}
+
+inputbar {
+    background-color:             @background;
+    border-color:                 @on-surface;
+    border:                       2px;
+    border-radius:                16px;
+    padding:                      8px 16px;
+    spacing:                      1px;
+    children:                     [ "prompt", "entry" ];
+}
+
+prompt {
+    enabled:                     true;
+    expand:                      false;
+    padding:                     0.2em 0.3em 0 0;
+    text-color:                  @on-surface;
+    background-color:            transparent;
+}
+
+entry {
+    enabled:                     true;
+    spacing:                     0em;
+    padding:                     0.2em;
+    text-color:                  @on-surface;
+    cursor:                      text;
+    placeholder:                 "Search";
+    background-color:            transparent;
+    placeholder-color:           inherit;
+}
+
+error-message {
+    text-color:                  @on-surface;
+    background-color:            @background;
+    text-transform:              capitalize;
+    children:                    [ "textbox" ];
+}
+
+textbox {
+    text-color:                  inherit;
+    background-color:            inherit;
+    vertical-align:              0.5;
+    horizontal-align:            0.5;
+}
+
+listview {
+    background-color:            transparent;
+    text-color:                  @on-surface;
+    spacing:                     0.5em;
+    margin:                      12px 0 0;
+    lines:                       7;
+    columns:                     2;
+    fixed-height:                false;
+    fixed-width:                 false;
+}
+
+element {
+    enabled:                     true;
+    spacing:                     10px;
+    padding:                     0.5em;
+    border-radius:               16px;
+    cursor:                      pointer;
+    background-color:            transparent;
+    text-color:                  @on-surface;
+}
+
+element normal active {
+    background-color:            inherit;
+    text-color:                  @on-surface;
+}
+
+element alternate active {
+    background-color:            @surface;
+    text-color:                  @on-surface;
+    border-radius:               1.5em;
+}
+
+element selected normal, element selected active {
+    background-color:            @primary;
+    text-color:                  @on-primary;
+    border-radius:               1.5em;
+}
+
+element-icon {
+    size:                        1.5em;
+    cursor:                      inherit;
+    background-color:            transparent;
+    text-color:                  inherit;
+    border-radius:               0em;
+}
+
+element-text {
+    vertical-align:              0.5;
+    horizontal-align:            0.0;
+    cursor:                      inherit;
+    background-color:            transparent;
+    text-color:                  inherit;
+}
