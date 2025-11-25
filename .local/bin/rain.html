@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Homepage</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@600;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+--rosewater: #f5e0dc;
+--flamingo: #f2cdcd;
+--pink: #f5c2e7;
+--mauve: #cba6f7;
+--red: #f38ba8;
+--maroon: #eba0ac;
+--peach: #fab387;
+--yellow: #f9e2af;
+--green: #a6e3a1;
+--teal: #94e2d5;
+--sky: #89dceb;
+--sapphire: #74c7ec;
+--blue: #89b4fa;
+--lavender: #b4befe;
+--text: #cdd6f4;
+--subtext1: #bac2de;
+--subtext0: #a6adc8;
+--overlay2: #9399b2;
+--overlay1: #7f849c;
+--overlay0: #6c7086;
+--surface2: #585b70;
+--surface1: #45475a;
+--surface0: #313244;
+--base: #1e1e2e;
+--mantle: #181825;
+--crust: #11111b;
+}
+
+/* page layout */
+* {box-sizing: border-box}
+html,body {height:100%}
+body{
+  margin:0;
+  font-family: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+  background: linear-gradient(180deg,var(--mantle), var(--crust));
+  color: var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.stage{
+        width:min(92vw, 980px);
+        margin:0 auto;
+        padding:clamp(24px,6vw,48px);
+        display:grid;
+        place-items:center;
+        position:relative;
+        z-index: 1;
+    }
+
+    /* gradient masked inside ascii art */
+    @keyframes gradientShift{
+        0%{background-position:0% 50%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 50%}
+    }
+
+    /* Subtle centered caption line */
+    .sub{
+        margin-top:18px;
+        color:var(--subtext1);
+        font-size:12px;
+        opacity:0.9;
+        letter-spacing:0.08em;
+        position: relative;
+        z-index: 2;
+    }
+
+
+/* slow gradient animation used for masked text */
+@keyframes slowShift{
+  0%{background-position: 0% 50%}
+  50%{background-position: 100% 50%}
+  100%{background-position: 0% 50%}
+}
+
+/* the ASCII logo */
+.logo{
+  font-weight:800;
+  font-size: clamp(12px,3.6vw,18px); /* small enough to fit, not big */
+  line-height:1;
+  text-align:center;
+  white-space: pre;
+  letter-spacing: 0.02em;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background: linear-gradient(90deg,
+            var(--pink) 0%,
+            var(--mauve) 18%,
+            var(--lavender) 36%,
+            var(--sky) 56%,
+            var(--teal) 72%,
+            var(--green) 86%,
+            var(--yellow) 100%);
+  background-size: 300% 300%;
+  animation: slowShift 28s linear infinite;
+  filter: drop-shadow(0 6px 18px rgba(10,8,14,0.45));
+  transform: translateZ(0);
+  z-index:4;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.12);
+  padding: 8px 12px;
+  border-radius: 10px;
+  background-clip: text;
+}
+
+/* Rain layer (slanted to the right a bit) */
+#rain{
+  position:fixed;
+  inset:0;
+  z-index:2; /* slightly below logo so logo remains readable */
+  pointer-events:none;
+  transform: skewX(-10deg); /* slant right visually */
+  overflow:visible;
+}
+
+.hint{
+    position:fixed;
+    bottom:18px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:11px;
+    color:var(--subtext0);
+    opacity:0.8;
+    letter-spacing:0.04em;
+    z-index:5;
+    backdrop-filter: blur(4px);
+}
+
+/* each drop (ASCII) */
+.drop{
+  position:absolute;
+  top:-8vh;
+  font-size: clamp(10px,1.5vw,14px);
+  opacity:0.9;
+  white-space:pre;
+  will-change: transform, opacity;
+  text-shadow: 0 0 8px rgba(255,255,255,0.06);
+  mix-blend-mode: screen;
+  user-select:none;
+}
+
+/* fall animation */
+@keyframes fall {
+  0% { transform: translateY(-10vh) }
+  85% { opacity:0.95 }
+  100% { transform: translateY(110vh); opacity:0.05 }
+}
+
+/* splatter (brief bloom at bottom) */
+.splat{
+  position:fixed;
+  z-index:2;
+  font-size:12px;
+  opacity:0.95;
+  transform-origin:center;
+  will-change: transform, opacity;
+  pointer-events:none;
+}
+
+/* splat animation */
+@keyframes splatAnim{
+  0% { transform: scale(0.4) translateY(-6px); opacity:1 }
+  60% { transform: scale(1.2) translateY(0); opacity:0.85 }
+  100% { transform: scale(1.6) translateY(6px); opacity:0 }
+}
+
+/* subtle vignette for mood */
+.vignette{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:5;
+  background: radial-gradient(60% 40% at 50% 40%, rgba(255,255,255,0.02), transparent 20%),
+              radial-gradient(70% 60% at 50% 70%, rgba(10,10,12,0.32), transparent 35%);
+  mix-blend-mode: multiply;
+}
+
+/* reduce motion preference */
+@media (prefers-reduced-motion: reduce){
+  .drop{ animation: none !important; transform: translateY(20vh) !important; opacity:0.4 }
+  .logo{ animation: none }
+}
+</style>
+</head>
+<body>
+<div class="stage" role="main" aria-label="Catppuccin ASCII Rain">
+        <pre class="logo">
+   __ __                                 
+  / // /__  __ _  ___ ___  ___  ___  ___ 
+ / _  / _ \/  ' \/ -_) _ \/ _ `/ _ `/ -_)
+/_//_/\___/_/_/_/\__/ .__/\_,_/\_, /\__/ 
+                   /_/        /___/      
+        </pre>
+        <div class="sub">catppuccin — ascii rain • minimal</div>
+    </div>
+
+
+  <div id="rain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="hint">I don't know how I made it but enjoy.</div>
+
+<script>
+/* Minimal but effective ASCII rain with splat at bottom.
+   Generates drops with random positions, durations and characters.
+*/
+(function(){
+  const rain = document.getElementById('rain');
+  const chars = ['.', ',', '\'', '`', 'ʼ', '|', ':', ';', '·', '•', '/', 'l', 'i', '!', '*'];
+  const splats = ['✶','✺','✹','•','✻','✷','⁂'];
+  const vw = () => Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+  const vh = () => Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+
+  // how many drops to keep on screen (density)
+  const COUNT = Math.round(Math.max(40, Math.min(120, (vw()/12))));
+
+  function rand(min, max){ return Math.random()*(max-min)+min }
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)] }
+
+  // create initial drops
+  for(let i=0;i<COUNT;i++) makeDrop(true);
+
+  // make a drop
+  function makeDrop(initial=false){
+    const d = document.createElement('span');
+    d.className = 'drop';
+    d.textContent = pick(chars);
+    const left = rand(-8, 105); // slightly offscreen edges
+    d.style.left = left + '%';
+
+    // random size + opacity for depth
+    const size = rand(10,16);
+    d.style.fontSize = size + 'px';
+    d.style.opacity = rand(0.45,0.95);
+
+    // random duration (slower = more visible)
+    const dur = rand(2.4, 7.6);
+    const delay = initial ? rand(0, -dur) : 0;
+    d.style.animation = `fall ${dur}s linear ${delay}s 1 forwards`;
+
+    // subtle horizontal jitter using transform
+    const sway = rand(-6,6);
+    d.style.transform = `translateX(${sway}px)`;
+
+    rain.appendChild(d);
+
+    // when drop finishes falling -> create a splat then recycle to top
+    d.addEventListener('animationend', ()=> {
+      // compute approximate x position in px to place splat
+      const rect = d.getBoundingClientRect();
+      const x = rect.left + rect.width/2;
+      const y = Math.min(vh()-6, rect.top + vh()*0.98); // bottom area
+
+      createSplat(x, y, pick(splats), size*0.9);
+      // remove and make a new drop shortly after so rain keeps going
+      d.remove();
+      setTimeout(()=> makeDrop(false), rand(60, 500)); // stagger respawn
+    });
+  }
+
+  // create a brief splatter effect at bottom
+  function createSplat(x, y, ch, baseSize){
+    const s = document.createElement('div');
+    s.className = 'splat';
+    s.textContent = ch;
+    s.style.left = (x - baseSize) + 'px';
+    s.style.top = (y - baseSize/2) + 'px';
+    s.style.fontSize = (baseSize + rand(-3,6)) + 'px';
+    s.style.opacity = 0.95;
+    s.style.transform = 'scale(0.4)';
+    s.style.animation = `splatAnim ${rand(420,760)/1000}s ease-out forwards`;
+    document.body.appendChild(s);
+    // remove after animation
+    setTimeout(()=> s.remove(), 900);
+  }
+
+  // keep density on resize
+  let resizeTimer;
+  window.addEventListener('resize', ()=> {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(()=> {
+      // remove extras or add more to maintain COUNT
+      const current = rain.children.length;
+      if(current < COUNT){
+        for(let i=0;i<COUNT-current;i++) makeDrop(true);
+      }
+      // if current > COUNT, remove some
+      else if(current > COUNT){
+        let removeCount = current - COUNT;
+        while(removeCount-->0 && rain.firstChild) rain.removeChild(rain.firstChild);
+      }
+    }, 180);
+  });
+
+})();
+</script>
+</body>
+</html>
