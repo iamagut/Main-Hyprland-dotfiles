@@ -31,7 +31,6 @@ tooltip label {
     border-radius: 17px;
     transition: all 200ms ease-in-out;
 }
-
 #workspaces button {
     transition: all 200ms ease-out;
     padding: 0px 3px;
@@ -43,7 +42,6 @@ tooltip label {
     font-weight: bolder;
     border: 2px solid transparent;
 }
-
 #workspaces button.active {
     transition: all 200ms ease-in-out;
     background-color: @primary;
@@ -53,28 +51,49 @@ tooltip label {
     border: 0px;
     min-width: 45px;
 }
-
 #workspaces button.focused {
     background-color: @primary;
     border-bottom: 3px solid white;
 }
 
-#clock {
+#clock,
+#pulseaudio,
+#backlight,
+#network,
+#backlight,
+#custom-notification,
+#window,
+#clock,
+#battery,
+#idle_inhibitor.deactivated,
+#idle_inhibitor.activated:hover {
     background-color: @background;
     color: @primary;
-    border-radius: 17px;
     padding: 0 15px;
     margin: 0 2px;
+    border-radius: 17px;
     font-weight: bolder;
+    transition: all 200ms ease-in-out;
 }
 
-#battery {
-    background-color: @background;
-    color: @primary;
+#clock:hover,
+#pulseaudio:hover,
+#backlight:hover,
+#network:hover,
+#backlight:hover,
+#custom-notification:hover,
+#window:hover,
+#clock:hover,
+#battery:hover,
+#idle_inhibitor.deactivated:hover,
+#idle_inhibitor.activated {
+    background-color: @primary;
+    color: @background;
     padding: 0 15px;
     margin: 0 2px;
     border-radius: 17px;
     font-weight: bolder;
+    transition: all 200ms ease-in-out;
 }
 
 #battery.charging {
@@ -82,7 +101,6 @@ tooltip label {
     background-color: @background;
     font-weight: bolder;
 }
-
 #battery.warning:not(.charging) {
     background: @background;
     color: @primary;
@@ -94,83 +112,11 @@ tooltip label {
     font-weight: bolder;
 }
 
-#pulseaudio {
-    background-color: @background;
-    color: @primary;
-    padding: 0 15px;
-    margin: 0 2px;
-    border-radius: 17px;
-    font-weight: bolder;
-}
-
-#backlight {
-    background-color: @background;
-    color: @primary;
-    padding: 0 15px;
-    margin: 0 2px;
-    border-radius: 17px;
-    font-weight: bolder;
-}
-
-#network {
-    background-color: @background;
-    color: @primary;
-    padding: 0 15px;
-    margin: 0 2px;
-    border-radius: 17px;
-    font-weight: bolder;
-}
-
-#custom-updates.empty {
-    background-color: transparent;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    color: transparent;
-}
-
-#idle_inhibitor.deactivated {
-    background-color: @background;
-    color: @primary;
-    padding: 0 15px;
-    margin: 0 2px;
-    border-radius: 17px;
-    font-weight: bolder;
-}
-
-#idle_inhibitor.activated {
-    background-color: @background;
-    color: @primary;
-    padding: 0 15px;
-    margin: 0 2px;
-    border-radius: 17px;
-    font-weight: bolder;
-}
-
-#custom-notification {
-    background-color: @background;
-    color: @primary;
-    border-radius: 17px;
-    padding: 0 15px;
-    margin: 0 2px;
-    font-weight: bolder;
-}
-
 #custom-notification.dnd {
     color: #7E643C;
 }
-
 #custom-notification.notification {
     color: @on_background;
-}
-
-#window {
-    background-color: @background;
-    color: @primary;
-    border-radius: 17px;
-    padding: 0 15px;
-    margin: 0 2px;
-    font-weight: bolder;
 }
 
 window#waybar.empty #window {
