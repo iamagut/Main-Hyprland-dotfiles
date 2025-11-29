@@ -1,4 +1,3 @@
-// Inspired by Catnap
 {
     "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
     "logo": {
@@ -12,7 +11,43 @@
     },
     "modules": [
         {
-            "key": "╭──────────────╮",
+            "key": "╭── HARDWARE ──╮",
+            "type": "custom"
+        },
+        {
+            "key": "│ {#31}󰌢 SYSTEM     {#keys}│",
+            "type": "host"
+        },
+        {
+            "key": "│ {#32}├ CPU       {#keys}│",
+            "type": "cpu",
+            "showPeCoreCount": true
+        },
+        {
+            "key": "│ {#33}├󰍛 GPU       {#keys}│",
+            "type": "gpu",
+            "format": "{2}",
+            "detectionMethod": "vulkan"
+        },
+        {
+            "key": "│ {#37}├󰍹 Display   {#keys}│",
+            "type": "display"
+        },
+        {
+            "key": "│ {#34}├ Memory    {#keys}│",
+            "type": "memory"
+        },
+        {
+            "key": "│ {#35}╰ Disk      {#keys}│",
+            "type": "disk",
+            "folders": "/"
+        },
+        {
+            "key": "╰──────────────╯",
+            "type": "custom"
+        },
+        {
+            "key": "╭── SOFTWARE ──╮",
             "type": "custom"
         },
         {
@@ -50,38 +85,6 @@
         {
             "key": "│ {#31}╰ Font      {#keys}│",
             "type": "font"
-        },
-        {
-            "key": "├──────────────┤",
-            "type": "custom"
-        },
-        {
-            "key": "│ {#31}󰌢 SYSTEM     {#keys}│",
-            "type": "host"
-        },
-        {
-            "key": "│ {#32}├ CPU       {#keys}│",
-            "type": "cpu",
-            "showPeCoreCount": true
-        },
-        {
-            "key": "│ {#33}├󰍛 GPU       {#keys}│",
-            "type": "gpu",
-            "format": "{2}",
-            "detectionMethod": "vulkan"
-        },
-        {
-            "key": "│ {#37}├󰍹 Display   {#keys}│",
-            "type": "display"
-        },
-        {
-            "key": "│ {#34}├ Memory    {#keys}│",
-            "type": "memory"
-        },
-        {
-            "key": "│ {#35}╰ Disk      {#keys}│",
-            "type": "disk",
-            "folders": "/"
         },
         {
             "key": "├──────────────┤",
