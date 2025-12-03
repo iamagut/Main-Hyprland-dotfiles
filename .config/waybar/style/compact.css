@@ -1,0 +1,124 @@
+@import "colors.css";
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "SF Pro Display" ,"Font Awesome 6 Free", sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    background: transparent;
+    min-height: 0;
+    margin: 0 0px;
+    padding: 0 2px;
+}
+
+window#waybar {
+    border-radius: 0px;
+    color: white;
+}
+
+tooltip {
+    background: @background;
+    border-radius: 10px;
+}
+tooltip label {
+    color: @primary;
+}
+
+#workspaces {
+    background-color: @background;
+    padding: 2px 2px;
+    margin: 0 2px;
+    border-radius: 7px;
+    transition: all 200ms ease-in-out;
+}
+#workspaces button {
+    transition: all 200ms ease-out;
+    padding: 0px 3px;
+    margin: 0 0px;
+    border-radius: 7px;
+    min-width: 40px;
+    background: @background;
+    color: @primary;
+}
+#workspaces button.active {
+    transition: all 200ms ease-in-out;
+    background-color: @primary;
+    color: @background;
+    font-weight: bolder;
+    border-radius: 7;
+    border: 0px;
+    min-width: 40px;
+}
+#workspaces button.focused {
+    background-color: @primary;
+    border-bottom: 3px solid white;
+}
+
+#clock,
+#pulseaudio,
+#backlight,
+#network,
+#backlight,
+#custom-notification,
+#window,
+#clock,
+#battery,
+#custom-update,
+#idle_inhibitor.deactivated,
+#idle_inhibitor.activated:hover {
+    background-color: @background;
+    color: @primary;
+    padding: 0 10px;
+    margin: 0 2px;
+    border-radius: 7px;
+    transition: all 200ms ease-in-out;
+}
+
+#clock:hover,
+#pulseaudio:hover,
+#backlight:hover,
+#network:hover,
+#backlight:hover,
+#custom-notification:hover,
+#window:hover,
+#clock:hover,
+#battery:hover,
+#custom-update:hover,
+#idle_inhibitor.deactivated:hover,
+#idle_inhibitor.activated {
+    background-color: @primary;
+    color: @background;
+    padding: 0 15px;
+    margin: 0 2px;
+    border-radius: 7px;
+    transition: all 200ms ease-in-out;
+}
+
+#battery.charging {
+    color: @primary;
+    background-color: @background;
+}
+#battery.warning:not(.charging) {
+    background: @background;
+    color: @primary;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: steps(12);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#custom-notification.dnd {
+    color: #7E643C;
+}
+#custom-notification.notification {
+    color: @on_background;
+}
+
+window#waybar.empty #window {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
