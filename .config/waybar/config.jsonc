@@ -1,32 +1,28 @@
 {
-    // -*- mode: jsonc -*-
-    // "layer": "top", // Waybar at top layer
-    // "position": "bottom", // Waybar position (top|bottom|left|right)
-    "height": 35,
-    // Waybar height (to be removed for auto height)
-    // "width": 1280,
-    "padding": 6,
+    "style": "~/.config/waybar/styles/compact.css",
+
+    "height": 27,
     "margin-top": 4,
     "margin-bottom": -1,
     "layer": "top",
     "modules-left": [
-        "clock",
         "hyprland/workspaces",
         "hyprland/window"
     ],
     "modules-center": [
-        "custom/notification"
+        "clock",
+        "custom/update"
     ],
     "modules-right": [
         "idle_inhibitor",
         "pulseaudio",
-        "backlight",
+        "network",
         "battery",
-        "network"
+        "custom/notification"
     ],
 
     "battery": {
-        "format": "{icon} {capacity}%",
+        "format": "<span font='10' rise='1000'>{icon}</span>  {capacity}%",
         "format-icons": [
             "󰁺",
             "󰁼",
@@ -36,33 +32,33 @@
         ]
     },
 
-     "clock": {
-        "format": "󰥔 {:%H:%M}",
+    "clock": {
+        "format": "<span font='10' rise='1000'>󰥔 </span>{:%H:%M}",
         "format-alt": "{:%a, %d. %b  %H:%M}",
         "tooltip-format": "<tt><small>{calendar}</small></tt>",
         "calendar": {
-                    "mode"          : "year",
-                    "mode-mon-col"  : 3,
-                    "weeks-pos"     : "right",
-                    "on-scroll"     : 1,
-                    "format": {
-                              "months":     "<span color='#ffead3'><b>{}</b></span>",
-                              "days":       "<span color='#ecc6d9'><b>{}</b></span>",
-                              "weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
-                              "weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
-                              "today":      "<span color='#ff6699'><b><u>{}</u></b></span>"
-                              }
-                    },
-        "actions":  {
-                    "on-scroll-up": "tz_up",
-                    "on-scroll-down": "tz_down",
-                    "on-scroll-up": "shift_up",
-                    "on-scroll-down": "shift_down"
-                    }
+            "mode": "year",
+            "mode-mon-col": 3,
+            "weeks-pos": "right",
+            "on-scroll": 1,
+            "format": {
+                "months": "<span color='#ffead3'><b>{}</b></span>",
+                "days": "<span color='#ecc6d9'><b>{}</b></span>",
+                "weeks": "<span color='#99ffdd'><b>W{}</b></span>",
+                "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+                "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
+            }
+        },
+        "actions": {
+            "on-scroll-up": "tz_up",
+            "on-scroll-down": "tz_down",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
     },
 
     "pulseaudio": {
-        "format": "{icon} {volume}%",
+        "format": "<span font='10'>{icon} </span>{volume}%",
         "format-bluetooth": "{icon} {volume}%",
         "format-muted": "",
         "format-icons": {
@@ -91,19 +87,19 @@
     "network": {
         "interface": "wlan0",
         "format": "{ifname}",
-        "format-wifi": "󰤨 {essid} ({signalStrength}%)",
-        "format-ethernet": "󰊗 {ipaddr}/{cidr} ",
+        "format-wifi": "<span font='10' rise='1000'>󰤨 </span>{essid} ({signalStrength}%)",
+        "format-ethernet": "<span font='10' rise='1000'>󰊗 </span>{ipaddr}/{cidr} ",
         "format-disconnected": "", // An empty format will hide the module.
-        "tooltip-format": "󰊗 {ifname} via {gwaddr}",
-        "tooltip-format-wifi": "󰤨 {essid} ({signalStrength}%)",
-        "tooltip-format-ethernet": " {ifname}",
+        "tooltip-format": "<span font='10' rise='1000'>󰊗 </span>{ifname} via {gwaddr}",
+        "tooltip-format-wifi": "<span font='10' rise='1000'>󰤨 </span>{essid} ({signalStrength}%)",
+        "tooltip-format-ethernet": "<span font='10' rise='1000'> </span>{ifname}",
         "tooltip-format-disconnected": "Disconnected",
         "max-length": 45,
         "on-click": "nm-connection-editor"
     },
 
     "idle_inhibitor": {
-        "format": "{icon} Caffiene Mode",
+        "format": "<span font='10'>{icon} </span>Caffiene Mode",
         "format-icons": {
             "activated": "󰅶",
             "deactivated": "󰛊"
@@ -112,7 +108,7 @@
 
     "custom/notification": {
         "tooltip": true,
-        "format": "{icon} Notification Center",
+        "format": "<span font='10'>{icon}</span>",
         "format-icons": {
             "none": "",
             "notification": "󱅫",
@@ -120,7 +116,7 @@
             "dnd-none": "󰂛",
             "inhibited-notification": "",
             "inhibited-none": "",
-            "dnd-inhibited-notification": " ",
+            "dnd-inhibited-notification": "",
             "dnd-inhibited-none": " "
         },
         "exec": "swaync-client -swb",
@@ -130,16 +126,18 @@
         "exec-if": "which swaync-client"
     },
 
+    "custom/update": {
+    "exec": "~/.config/waybar/scripts/update.sh",
+    "interval": 60,  
+    "return-type": "json",
+    "format": "<span font='10' rise='1000'> </span>{}",
+    "on-click": "kitty -e sh -c 'yay -Syu'"
+    },
+
     "backlight": {
         "device": "intel_backlight",
-        "format": "{icon} {percent}%",
-        "format-icons": [
-            "󰪞",
-            "󰪟",
-            "󰪡",
-            "󰪣",
-            "󰪥"
-        ]
+        "format": "<span font='10' rise='1000'>{icon}</span>   {percent}%",
+        "format-icons": ["", "", "", "", "", "", "", "", ""]
     },
 
     "hyprland/workspaces": {
@@ -152,6 +150,6 @@
     "hyprland/window": {
         "format": "{}",
         "separate-outputs": true,
-        "max-length": 45
+        "max-length": 30
     }
 }

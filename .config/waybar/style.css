@@ -3,8 +3,9 @@
 * {
     border: none;
     border-radius: 0;
-    font-family: "FiraCode Nerd Font", "FiraMono Nerd Font", "JetbrainsMono Nerd Font Propo";
-    font-size: 10pt;
+    font-family: "SF Pro Display" ,"Font Awesome 6 Free", sans-serif;
+    font-size: 14px;
+    font-weight: bold;
     background: transparent;
     min-height: 0;
     margin: 0 0px;
@@ -28,28 +29,26 @@ tooltip label {
     background-color: @background;
     padding: 2px 2px;
     margin: 0 2px;
-    border-radius: 17px;
+    border-radius: 7px;
     transition: all 200ms ease-in-out;
 }
 #workspaces button {
     transition: all 200ms ease-out;
     padding: 0px 3px;
     margin: 0 0px;
-    border-radius: 17px;
-    min-width: 20px;
+    border-radius: 7px;
+    min-width: 40px;
     background: @background;
     color: @primary;
-    font-weight: bolder;
-    border: 2px solid transparent;
 }
 #workspaces button.active {
     transition: all 200ms ease-in-out;
     background-color: @primary;
     color: @background;
     font-weight: bolder;
-    border-radius: 17;
+    border-radius: 7;
     border: 0px;
-    min-width: 45px;
+    min-width: 40px;
 }
 #workspaces button.focused {
     background-color: @primary;
@@ -65,14 +64,14 @@ tooltip label {
 #window,
 #clock,
 #battery,
+#custom-update,
 #idle_inhibitor.deactivated,
 #idle_inhibitor.activated:hover {
     background-color: @background;
     color: @primary;
-    padding: 0 15px;
+    padding: 0 10px;
     margin: 0 2px;
-    border-radius: 17px;
-    font-weight: bolder;
+    border-radius: 7px;
     transition: all 200ms ease-in-out;
 }
 
@@ -85,21 +84,20 @@ tooltip label {
 #window:hover,
 #clock:hover,
 #battery:hover,
+#custom-update:hover,
 #idle_inhibitor.deactivated:hover,
 #idle_inhibitor.activated {
     background-color: @primary;
     color: @background;
     padding: 0 15px;
     margin: 0 2px;
-    border-radius: 17px;
-    font-weight: bolder;
+    border-radius: 7px;
     transition: all 200ms ease-in-out;
 }
 
 #battery.charging {
     color: @primary;
     background-color: @background;
-    font-weight: bolder;
 }
 #battery.warning:not(.charging) {
     background: @background;
@@ -109,7 +107,6 @@ tooltip label {
     animation-timing-function: steps(12);
     animation-iteration-count: infinite;
     animation-direction: alternate;
-    font-weight: bolder;
 }
 
 #custom-notification.dnd {
