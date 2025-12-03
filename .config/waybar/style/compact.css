@@ -35,9 +35,9 @@ tooltip label {
 #workspaces button {
     transition: all 200ms ease-out;
     padding: 0px 3px;
-    margin: 0 0px;
+    margin: 0 1px;
     border-radius: 7px;
-    min-width: 40px;
+    min-width: 20px;
     background: @background;
     color: @primary;
 }
@@ -89,7 +89,7 @@ tooltip label {
 #idle_inhibitor.activated {
     background-color: @primary;
     color: @background;
-    padding: 0 15px;
+    padding: 0 10px;
     margin: 0 2px;
     border-radius: 7px;
     transition: all 200ms ease-in-out;
