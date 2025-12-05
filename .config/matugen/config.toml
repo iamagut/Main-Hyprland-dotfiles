@@ -1,10 +1,8 @@
 [options]
 mode = "wallpaper"
 
-[config.wallpaper]
-command = "swww"
-arguments = ["img", "--transition-type", "any"]
-set = true
+# [config.wallpaper]
+# Use the settings in waypaper
 
 [templates.kitty]
 input_path = '~/.config/matugen/templates/kitty-colors.conf'
