@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 wall="$1"
 
 ln -sf "$wall" ~/.config/current_wallpaper
