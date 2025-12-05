@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-
+#!/usr/bin/bash
 # Directory to store temporary image previews
 cache_dir="/tmp/cliphist_preview"
 mkdir -p "$cache_dir"
