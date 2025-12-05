@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 if [[ $(playerctl -p spotify status 2>/dev/null) == "Playing" ]]; then
     status='▷  '
 else
