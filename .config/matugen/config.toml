@@ -2,7 +2,7 @@
 mode = "wallpaper"
 
 [config.wallpaper]
-command = "swww img {wallpaper} --transition-step 90 --transition-fps 60"
+command = "swww img {wallpaper} --transition-fps 60"
 
 [templates.kitty]
 input_path = '~/.config/matugen/templates/kitty-colors.conf'
