@@ -9,4 +9,4 @@ case $1 in
 esac
 
 # Run rofi
-rofi -show "$r_mode" -theme-str 'window {width: 500px;}'
+rofi -show "$r_mode" -theme-str 'window {width: 850px;}'
