@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Usage: ./rofilaunch.sh [d|w|f]
 # d = drun (apps), w = window, f = filebrowser
 
