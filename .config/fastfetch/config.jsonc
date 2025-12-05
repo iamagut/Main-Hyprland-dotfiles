@@ -22,8 +22,7 @@
         },
         {
             "key": "│ {#32}├ CPU       {#keys}│",
-            "type": "cpu",
-            "showPeCoreCount": true
+            "type": "cpu"
         },
         {
             "key": "│ {#33}├󰍛 GPU       {#keys}│",
