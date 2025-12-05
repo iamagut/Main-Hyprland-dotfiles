@@ -1,2 +1,2 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 rofi -modi emoji -show emoji -theme-str 'window {width: 500px;}'
