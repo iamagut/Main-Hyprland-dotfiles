@@ -2,8 +2,8 @@
 
 * {
     font:                       "JetbrainsMono Nerd Font Propo 12";
-    background-color:           @surface;
-    text-color:                 @on-surface;
+    background-color:           @surface-container-lowest;
+    text-color:                 @primary;
     sidebar-mode:               true; 
     margin:                     0px;
     padding:                    0px;
@@ -21,7 +21,7 @@ configuration {
 	drun-display-format:         "{name}";
     hover-select:                true;
     background-color:            transparent;
-    text-color:                  @on-surface;
+    text-color:                  @primary;
 }
 
 window {
@@ -31,9 +31,10 @@ window {
     cursor:                      "default";
     spacing:                     0em;
     padding:                     0em;
+    border:                      2px;
     border-radius:               16px;
     background-color:            transparent;
-    border-color:                @on-surface;
+    border-color:                @secondary;
 }
 
 mainbox {
@@ -57,7 +58,7 @@ sidebar {
 }
 
 inputbar {
-    background-color:             @surface;
+    background-color:             @surface-container-lowest;
     border-radius:                12px;
     padding:                      8px 16px;
     spacing:                      1px;
@@ -70,8 +71,8 @@ prompt {
     enabled:                     true;
     expand:                      false;
     padding:                     0.2em 0.3em 0 0;
-    text-color:                  @on-surface;
-    background-color:            @surface;
+    text-color:                  @primary;
+    background-color:            @surface-container-lowest;
 }
 
 button {
@@ -79,7 +80,7 @@ button {
     padding: 8 20px;
     border-radius: 10px;
     background-color: @surface-container-low;
-    text-color: @on-surface;
+    text-color: @primary;
     cursor: pointer;
 }
 
@@ -92,15 +93,15 @@ entry {
     enabled:                     true;
     spacing:                     0em;
     padding:                     0.2em;
-    text-color:                  @on-surface;
+    text-color:                  @primary;
     cursor:                      text;
     placeholder:                 "Search...";
-    background-color:            @surface;
+    background-color:            @surface-container-lowest;
     placeholder-color:           inherit;
 }
 
 error-message {
-    text-color:                  @on-surface;
+    text-color:                  @primary;
     background-color:            @background;
     text-transform:              capitalize;
     children:                    [ "textbox" ];
@@ -114,8 +115,8 @@ textbox {
 }
 
 listview {
-    background-color:            @surface;
-    text-color:                  @on-surface;
+    background-color:            @surface-container-lowest;
+    text-color:                  @primary;
     spacing:                     0.5em;
     margin:                      12px 0 0;
     lines:                       7;
@@ -129,18 +130,18 @@ element {
     padding:                     0.5em;
     border-radius:               16px;
     cursor:                      pointer;
-    background-color:            @surface;
-    text-color:                  @on-surface;
+    background-color:            @surface-container-lowest;
+    text-color:                  @primary;
 }
 
 element normal active {
     background-color:            inherit;
-    text-color:                  @on-surface;
+    text-color:                  @primary;
 }
 
 element alternate active {
-    background-color:            @surface;
-    text-color:                  @on-surface;
+    background-color:            @surface-container-lowest;
+    text-color:                  @primary;
     border-radius:               0.5em;
 }
 
