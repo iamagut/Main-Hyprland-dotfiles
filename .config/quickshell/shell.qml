@@ -10,17 +10,39 @@ ShellRoot {
         target: "qsIpc"
 
         function toggleWallpaperSwitcher() {
-            panel.switcherOpen = !panel.switcherOpen
+            if (panel.activeOverlay === "wallpaper" && panel.overlayOpen) {
+                panel.overlayOpen = false
+            } else {
+                panel.activeOverlay = "wallpaper"
+                panel.overlayOpen = true
+            }
         }
         function openWallpaperSwitcher() {
-            panel.switcherOpen = true
+            panel.activeOverlay = "wallpaper"
+            panel.overlayOpen = true
         }
         function closeWallpaperSwitcher() {
-            panel.switcherOpen = false
+            if (panel.activeOverlay === "wallpaper") panel.overlayOpen = false
+        }
+
+        function toggleAppLauncher() {
+            if (panel.activeOverlay === "launcher" && panel.overlayOpen) {
+                panel.overlayOpen = false
+            } else {
+                panel.activeOverlay = "launcher"
+                panel.overlayOpen = true
+            }
+        }
+        function openAppLauncher() {
+            panel.activeOverlay = "launcher"
+            panel.overlayOpen = true
+        }
+        function closeAppLauncher() {
+            if (panel.activeOverlay === "launcher") panel.overlayOpen = false
         }
     }
 
-    // Main Panel Window containing Top Bar & Overlay Wallpaper Switcher
+    // Main Panel Window containing Top Bar & Dropdown Overlays
     PanelWindow {
         id: panel
         anchors {
@@ -30,27 +52,62 @@ ShellRoot {
         }
 
         WlrLayershell.layer: WlrLayer.Overlay
+        WlrLayershell.keyboardFocus: (overlayOpen && activeOverlay === "launcher") ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
         exclusionMode: ExclusionMode.Normal
-        exclusiveZone: barHeight
+        exclusiveZone: Math.round(barHeight * barVisibilityProgress)
+
+        // Input hit-test region: when the dropdown is closed,
+        // let pointer events pass through to apps underneath.
+        // When openProgress > 0, expand the mask to cover the active overlay.
+        mask: Region {
+            shape: RegionShape.Rect
+            x: 0
+            y: 0
+            width: panel.width
+            height: (panel.barHeight + panel.openProgress * panel.overlayHeight) * panel.barVisibilityProgress
+            radius: 0
+        }
 
         readonly property int barHeight: 40
-        readonly property int switcherHeight: 450
-        property bool switcherOpen: false
-        readonly property real openProgress: Math.max(0, Math.min(1, (implicitHeight - barHeight) / switcherHeight))
+        readonly property int overlayHeight: 560
 
-        implicitWidth: 1040
-        implicitHeight: barHeight + (switcherOpen ? switcherHeight : 0)
+        property string activeOverlay: "launcher" // "launcher" or "wallpaper"
+        property bool overlayOpen: false
 
-        Behavior on implicitHeight {
-            NumberAnimation { duration: 350; easing.type: Easing.OutCubic }
+        readonly property bool hideForFullscreen: Boolean(Hyprland.focusedWorkspace && Hyprland.focusedWorkspace.hasFullscreen)
+        property real barVisibilityProgress: hideForFullscreen ? 0 : 1
+
+        Behavior on barVisibilityProgress {
+            NumberAnimation { duration: 220; easing.type: Easing.InOutQuad }
         }
+        onHideForFullscreenChanged: {
+            if (hideForFullscreen) overlayOpen = false
+            barVisibilityProgress = hideForFullscreen ? 0 : 1
+        }
+
+        // Animated progress for opening/closing the dropdown overlays.
+        property real openProgress: 0
+        Behavior on openProgress {
+            NumberAnimation { duration: 300; easing.type: Easing.OutCubic }
+        }
+        onOverlayOpenChanged: openProgress = overlayOpen ? 1 : 0
+
+        implicitWidth: 1025
+        implicitHeight: barHeight + overlayHeight
 
         color: "transparent"
 
         Rectangle {
-            anchors.fill: parent
-            color: Color.md3.surface_container_high
-            radius: 16
+            id: background
+            height: panel.barHeight + panel.openProgress * panel.overlayHeight
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+            }
+            opacity: panel.barVisibilityProgress
+            color: Color.md3.background
+            radius: 8
             border.color: Color.md3.outline_variant
             border.width: 1
             clip: true
@@ -72,7 +129,75 @@ ShellRoot {
                         verticalCenter: parent.verticalCenter
                         leftMargin: 14
                     }
-                    spacing: 8
+                    spacing: 10
+
+                    // App Launcher Trigger Button
+                    Rectangle {
+                        height: 28
+                        width: 28
+                        radius: 8
+                        color: (panel.overlayOpen && panel.activeOverlay === "launcher") ? Color.md3.primary : (launcherBtnMouse.containsMouse ? Color.md3.surface_container_highest : Color.md3.surface_container_low)
+                        border.color: (panel.overlayOpen && panel.activeOverlay === "launcher") ? Color.md3.primary : Color.md3.outline_variant
+                        border.width: 1
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: "󰵆"
+                            font.family: "Jetbrains Mono Nerd Font Propo"
+                            font.pixelSize: 14
+                            color: (panel.overlayOpen && panel.activeOverlay === "launcher") ? Color.md3.on_primary : Color.md3.primary
+                        }
+
+                        MouseArea {
+                            id: launcherBtnMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                if (panel.activeOverlay === "launcher" && panel.overlayOpen) {
+                                    panel.overlayOpen = false
+                                } else {
+                                    panel.activeOverlay = "launcher"
+                                    panel.overlayOpen = true
+                                }
+                            }
+                        }
+                    }
+
+                    // Wallpaper Switcher Trigger Button
+                    Rectangle {
+                        height: 28
+                        width: 28
+                        radius: 8
+                        color: (panel.overlayOpen && panel.activeOverlay === "wallpaper") ? Color.md3.primary : (wallpaperBtnMouse.containsMouse ? Color.md3.surface_container_highest : Color.md3.surface_container_low)
+                        border.color: (panel.overlayOpen && panel.activeOverlay === "wallpaper") ? Color.md3.primary : Color.md3.outline_variant
+                        border.width: 1
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: "󰸉"
+                            font.family: "Jetbrains Mono Nerd Font Propo"
+                            font.pixelSize: 14
+                            color: (panel.overlayOpen && panel.activeOverlay === "wallpaper") ? Color.md3.on_primary : Color.md3.primary
+                        }
+
+                        MouseArea {
+                            id: wallpaperBtnMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                if (panel.activeOverlay === "wallpaper" && panel.overlayOpen) {
+                                    panel.overlayOpen = false
+                                } else {
+                                    panel.activeOverlay = "wallpaper"
+                                    panel.overlayOpen = true
+                                }
+                            }
+                        }
+                    }
 
                     Workspaces {}
                 }
@@ -91,47 +216,19 @@ ShellRoot {
                     }
                     spacing: 20
 
-                    // Wallpaper Switcher Button
-                    Rectangle {
-                        Layout.alignment: Qt.AlignVCenter
-                        width: 28
-                        height: 28
-                        radius: 8
-                        color: panel.switcherOpen ? Color.md3.primary_container : (wpMouse.containsMouse ? Color.md3.surface_container_highest : "transparent")
-
-                        Behavior on color { ColorAnimation { duration: 150 } }
-
-                        Text {
-                            anchors.centerIn: parent
-                            text: "󰸉"
-                            font.family: "Jetbrains Mono Nerd Font Propo"
-                            font.pixelSize: 15
-                            color: panel.switcherOpen ? Color.md3.on_primary_container : (wpMouse.containsMouse ? Color.md3.primary : Color.md3.on_surface)
-                        }
-
-                        MouseArea {
-                            id: wpMouse
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: panel.switcherOpen = !panel.switcherOpen
-                        }
-                    }
-
                     Wifi { Layout.alignment: Qt.AlignVCenter }
                     Volume { Layout.alignment: Qt.AlignVCenter }
-                    Battery { Layout.alignment: Qt.AlignVCenter }
                 }
             }
 
-            // --- WALLPAPER SWITCHER SECTION ---
+            // --- DROPDOWN OVERLAY SECTION ---
             Item {
-                id: switcherSection
+                id: overlaySection
                 anchors.top: bar.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: panel.switcherHeight
-                visible: panel.implicitHeight > panel.barHeight
+                height: panel.overlayHeight
+                visible: panel.openProgress > 0
                 opacity: panel.openProgress
 
                 transform: Translate {
@@ -146,9 +243,33 @@ ShellRoot {
                     color: Color.md3.outline_variant
                 }
 
+                // Wallpaper Switcher
                 WallpaperSwitcher {
                     anchors.fill: parent
-                    onWallpaperSelected: panel.switcherOpen = false
+                    opacity: (panel.overlayOpen && panel.activeOverlay === "wallpaper") ? 1 : 0
+                    visible: opacity > 0.001
+                    enabled: opacity > 0.99
+
+                    Behavior on opacity {
+                        NumberAnimation { duration: 240; easing.type: Easing.InOutQuad }
+                    }
+
+                    onWallpaperSelected: panel.overlayOpen = false
+                }
+
+                // App Launcher
+                AppLauncher {
+                    anchors.fill: parent
+                    opacity: (panel.overlayOpen && panel.activeOverlay === "launcher") ? 1 : 0
+                    visible: opacity > 0.001
+                    enabled: opacity > 0.99
+                    active: panel.overlayOpen && panel.activeOverlay === "launcher"
+
+                    Behavior on opacity {
+                        NumberAnimation { duration: 240; easing.type: Easing.InOutQuad }
+                    }
+
+                    onAppLaunched: panel.overlayOpen = false
                 }
             }
         }

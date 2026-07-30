@@ -8,35 +8,19 @@ Item {
     id: switcherRoot
     signal wallpaperSelected(string path)
 
-    readonly property string wallpaperDir: Quickshell.env("HOME") + "/Pictures/wallpaper"
-    property int scanGeneration: 0
-
-    function reloadWallpapers() {
-        // Bump first so any in-flight find output is ignored.
-        scanGeneration++
-        wallpaperModel.clear()
-        findProcess.running = false
-        findProcess.activeGeneration = scanGeneration
-        findProcess.running = true
-    }
-
     ListModel {
         id: wallpaperModel
     }
 
     Process {
         id: findProcess
-        property int activeGeneration: 0
-        command: ["find", switcherRoot.wallpaperDir, "-type", "f", "(", "-iname", "*.jpg", "-o", "-iname", "*.jpeg", "-o", "-iname", "*.png", "-o", "-iname", "*.webp", "-o", "-iname", "*.gif", ")"]
+        command: ["find", Quickshell.env("HOME") + "/Pictures/wallpaper", "-type", "f", "(", "-iname", "*.jpg", "-o", "-iname", "*.jpeg", "-o", "-iname", "*.png", "-o", "-iname", "*.webp", "-o", "-iname", "*.gif", ")"]
         running: true
         stdout: SplitParser {
             onRead: data => {
-                if (findProcess.activeGeneration !== switcherRoot.scanGeneration)
-                    return
-
                 var trimmed = data.trim()
                 if (trimmed.length > 0) {
-                    var homeDir = switcherRoot.wallpaperDir + "/"
+                    var homeDir = Quickshell.env("HOME") + "/Pictures/wallpaper/"
                     var rel = trimmed.startsWith(homeDir) ? trimmed.substring(homeDir.length) : trimmed
                     var parts = rel.split('/')
                     var category = parts.length > 1 ? parts[0] : "general"
@@ -50,28 +34,6 @@ Item {
                 }
             }
         }
-    }
-
-    // Poll the wallpaper tree for added/removed files and folders, then reload.
-    Process {
-        id: watchProcess
-        running: true
-        command: [
-            "sh", "-c",
-            'dir="$HOME/Pictures/wallpaper"; prev=""; while true; do cur=$(find "$dir" \\( -type f -o -type d \\) -printf "%p %T@ %s\\n" 2>/dev/null | cksum); if [ -n "$prev" ] && [ "$cur" != "$prev" ]; then echo changed; fi; prev="$cur"; sleep 1; done'
-        ]
-        stdout: SplitParser {
-            onRead: data => {
-                if (data.trim() === "changed")
-                    reloadDebounce.restart()
-            }
-        }
-    }
-
-    Timer {
-        id: reloadDebounce
-        interval: 250
-        onTriggered: switcherRoot.reloadWallpapers()
     }
 
     ColumnLayout {
@@ -203,6 +165,4 @@ Item {
     Process {
         id: applyProcess
     }
-
-    Component.onCompleted: findProcess.activeGeneration = scanGeneration
 }
