@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
+import QtQuick.Effects
 
 Item {
     id: launcherRoot
@@ -13,9 +14,8 @@ Item {
     property string searchQuery: ""
     property string selectedCategory: "All"
     property int selectedIndex: 0
-    property bool isGridView: true
+    property bool isGridView: false
 
-    // List of recent app IDs (stored in memory)
     property var recentAppIds: []
 
     property var filteredApps: []
@@ -129,6 +129,13 @@ Item {
     }
 
     onSearchQueryChanged: updateFilteredApps()
+    onSelectedIndexChanged: {
+        if (isGridView) {
+            appsGrid.positionViewAtIndex(selectedIndex, GridView.Contain)
+        } else {
+            appsList.positionViewAtIndex(selectedIndex, ListView.Contain)
+        }
+    }
     onSelectedCategoryChanged: {
         selectedIndex = 0
         updateFilteredApps()
@@ -139,12 +146,11 @@ Item {
         anchors.margins: 14
         spacing: 12
 
-        // --- HEADER & SEARCH BAR ---
+        // --- HEADER BAR ---
         RowLayout {
             Layout.fillWidth: true
             spacing: 10
 
-            // Title Badge
             Text {
                 text: "󰵆 Applications"
                 font.family: "Jetbrains Mono Nerd Font Propo"
@@ -152,6 +158,44 @@ Item {
                 font.bold: true
                 color: Color.md3.primary
             }
+
+            Text {
+                text: "(" + launcherRoot.filteredApps.length + " available)"
+                font.family: "Jetbrains Mono Nerd Font Propo"
+                font.pixelSize: 12
+                color: Color.md3.on_surface_variant
+            }
+
+            Item { Layout.fillWidth: true }
+
+            RowLayout {
+                spacing: 10
+                opacity: 0.8
+
+                RowLayout {
+                    spacing: 4
+                    Text { text: "↑ ↓ ← →"; font.family: "Jetbrains Mono Nerd Font Propo"; font.pixelSize: 11; font.bold: true; color: Color.md3.primary }
+                    Text { text: "Navigate"; font.family: "Jetbrains Mono Nerd Font Propo"; font.pixelSize: 11; color: Color.md3.on_surface_variant }
+                }
+
+                RowLayout {
+                    spacing: 4
+                    Text { text: "↵"; font.family: "Jetbrains Mono Nerd Font Propo"; font.pixelSize: 11; font.bold: true; color: Color.md3.primary }
+                    Text { text: "Launch"; font.family: "Jetbrains Mono Nerd Font Propo"; font.pixelSize: 11; color: Color.md3.on_surface_variant }
+                }
+
+                RowLayout {
+                    spacing: 4
+                    Text { text: "Esc"; font.family: "Jetbrains Mono Nerd Font Propo"; font.pixelSize: 11; font.bold: true; color: Color.md3.primary }
+                    Text { text: "Close"; font.family: "Jetbrains Mono Nerd Font Propo"; font.pixelSize: 11; color: Color.md3.on_surface_variant }
+                }
+            }
+        }
+
+        // --- SEARCH BAR & VIEW TOGGLE ---
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 10
 
             // Search Box
             Rectangle {
@@ -201,7 +245,7 @@ Item {
                         }
 
                         Keys.onDownPressed: {
-                            var cols = launcherRoot.isGridView ? 5 : 1
+                            var cols = launcherRoot.isGridView ? Math.max(1, Math.floor(appsGrid.width / appsGrid.cellWidth)) : 1
                             if (launcherRoot.selectedIndex + cols < launcherRoot.filteredApps.length) {
                                 launcherRoot.selectedIndex += cols
                             } else {
@@ -210,7 +254,7 @@ Item {
                         }
 
                         Keys.onUpPressed: {
-                            var cols = launcherRoot.isGridView ? 5 : 1
+                            var cols = launcherRoot.isGridView ? Math.max(1, Math.floor(appsGrid.width / appsGrid.cellWidth)) : 1
                             if (launcherRoot.selectedIndex - cols >= 0) {
                                 launcherRoot.selectedIndex -= cols
                             } else {
@@ -352,80 +396,6 @@ Item {
             }
         }
 
-        // --- RECENTLY LAUNCHED BAR ---
-        ColumnLayout {
-            Layout.fillWidth: true
-            visible: launcherRoot.searchQuery === "" && launcherRoot.selectedCategory === "All" && launcherRoot.recentAppIds.length > 0
-            spacing: 4
-
-            Text {
-                text: "Recent"
-                font.family: "Jetbrains Mono Nerd Font Propo"
-                font.pixelSize: 11
-                font.bold: true
-                color: Color.md3.primary
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: 8
-
-                Repeater {
-                    model: launcherRoot.recentAppIds
-
-                    delegate: Item {
-                        required property string modelData
-                        readonly property var recentApp: DesktopEntries.byId(modelData)
-                        visible: recentApp !== null
-
-                        width: 120
-                        height: 34
-
-                        Rectangle {
-                            anchors.fill: parent
-                            radius: 8
-                            color: recMouse.containsMouse ? Color.md3.surface_container_highest : Color.md3.surface_container_low
-                            border.color: Color.md3.outline_variant
-                            border.width: 1
-
-                            RowLayout {
-                                anchors.fill: parent
-                                anchors.margins: 4
-                                spacing: 6
-
-                                Image {
-                                    width: 20
-                                    height: 20
-                                    source: recentApp ? launcherRoot.getIconSource(recentApp.icon) : ""
-                                    fillMode: Image.PreserveAspectFit
-                                    asynchronous: true
-                                }
-
-                                Text {
-                                    Layout.fillWidth: true
-                                    text: recentApp ? recentApp.name : ""
-                                    font.family: "Jetbrains Mono Nerd Font Propo"
-                                    font.pixelSize: 11
-                                    color: Color.md3.on_surface
-                                    elide: Text.ElideRight
-                                }
-                            }
-
-                            MouseArea {
-                                id: recMouse
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    if (recentApp) launcherRoot.launchApp(recentApp)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         // Separator
         Rectangle {
             Layout.fillWidth: true
@@ -474,22 +444,39 @@ Item {
                 model: launcherRoot.filteredApps
 
                 delegate: Item {
+                    id: gridDelegate
                     required property var modelData
                     required property int index
 
                     width: appsGrid.cellWidth
                     height: appsGrid.cellHeight
 
+                    readonly property bool isSelected: launcherRoot.selectedIndex === index
+
                     Rectangle {
                         anchors.fill: parent
                         anchors.margins: 4
                         radius: 12
-                        color: (launcherRoot.selectedIndex === index) ? Color.md3.primary_container : (gridMouse.containsMouse ? Color.md3.surface_container_highest : Color.md3.surface_container_low)
-                        border.color: (launcherRoot.selectedIndex === index) ? Color.md3.primary : Color.md3.outline_variant
-                        border.width: (launcherRoot.selectedIndex === index) ? 2 : 1
+                        color: isSelected ? Color.md3.primary_container : (gridMouse.containsMouse ? Color.md3.surface_container_highest : "transparent")
+                        border.width: 0
+
+                        scale: isSelected ? 1.04 : 1.0
+                        transformOrigin: Item.Center
+
+                        Behavior on scale {
+                            NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
+                        }
 
                         Behavior on color { ColorAnimation { duration: 120 } }
-                        Behavior on border.color { ColorAnimation { duration: 120 } }
+
+                        layer.enabled: isSelected
+                        layer.effect: MultiEffect {
+                            shadowEnabled: true
+                            shadowColor: Qt.rgba(0, 0, 0, 0.25)
+                            shadowBlur: 0.4
+                            shadowVerticalOffset: 3
+                            shadowHorizontalOffset: 0
+                        }
 
                         RowLayout {
                             anchors.fill: parent
@@ -523,7 +510,7 @@ Item {
                                     font.family: "Jetbrains Mono Nerd Font Propo"
                                     font.pixelSize: 12
                                     font.bold: true
-                                    color: (launcherRoot.selectedIndex === index) ? Color.md3.on_primary_container : Color.md3.on_surface
+                                    color: isSelected ? Color.md3.on_primary_container : Color.md3.on_surface
                                     elide: Text.ElideRight
                                 }
 
@@ -532,7 +519,7 @@ Item {
                                     text: modelData.app.genericName || modelData.category
                                     font.family: "Jetbrains Mono Nerd Font Propo"
                                     font.pixelSize: 10
-                                    color: (launcherRoot.selectedIndex === index) ? Color.md3.on_primary_container : Color.md3.on_surface_variant
+                                    color: isSelected ? Color.md3.on_primary_container : Color.md3.on_surface_variant
                                     elide: Text.ElideRight
                                     opacity: 0.8
                                 }
@@ -561,21 +548,42 @@ Item {
                 model: launcherRoot.filteredApps
 
                 delegate: Item {
+                    id: listDelegate
                     required property var modelData
                     required property int index
 
                     width: appsList.width
                     height: 48
 
+                    readonly property bool isSelected: launcherRoot.selectedIndex === index
+
                     Rectangle {
                         anchors.fill: parent
-                        anchors.rightMargin: 4
+                        anchors.leftMargin: 8
+                        anchors.rightMargin: 8
+                        anchors.topMargin: 2
+                        anchors.bottomMargin: 2
                         radius: 10
-                        color: (launcherRoot.selectedIndex === index) ? Color.md3.primary_container : (listMouse.containsMouse ? Color.md3.surface_container_highest : Color.md3.surface_container_low)
-                        border.color: (launcherRoot.selectedIndex === index) ? Color.md3.primary : Color.md3.outline_variant
-                        border.width: (launcherRoot.selectedIndex === index) ? 2 : 1
+                        color: isSelected ? Color.md3.primary_container : (listMouse.containsMouse ? Color.md3.surface_container_highest : "transparent")
+                        border.width: 0
+
+                        scale: isSelected ? 1.02 : 1.0
+                        transformOrigin: Item.Center
+
+                        Behavior on scale {
+                            NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
+                        }
 
                         Behavior on color { ColorAnimation { duration: 120 } }
+
+                        layer.enabled: isSelected
+                        layer.effect: MultiEffect {
+                            shadowEnabled: true
+                            shadowColor: Qt.rgba(0, 0, 0, 0.2)
+                            shadowBlur: 0.3
+                            shadowVerticalOffset: 2
+                            shadowHorizontalOffset: 0
+                        }
 
                         RowLayout {
                             anchors.fill: parent
@@ -609,7 +617,7 @@ Item {
                                     font.family: "Jetbrains Mono Nerd Font Propo"
                                     font.pixelSize: 12
                                     font.bold: true
-                                    color: (launcherRoot.selectedIndex === index) ? Color.md3.on_primary_container : Color.md3.on_surface
+                                    color: isSelected ? Color.md3.on_primary_container : Color.md3.on_surface
                                     elide: Text.ElideRight
                                 }
 
@@ -618,7 +626,7 @@ Item {
                                     text: modelData.app.comment || modelData.app.genericName || modelData.app.execString
                                     font.family: "Jetbrains Mono Nerd Font Propo"
                                     font.pixelSize: 10
-                                    color: (launcherRoot.selectedIndex === index) ? Color.md3.on_primary_container : Color.md3.on_surface_variant
+                                    color: isSelected ? Color.md3.on_primary_container : Color.md3.on_surface_variant
                                     elide: Text.ElideRight
                                     opacity: 0.8
                                 }
@@ -628,7 +636,7 @@ Item {
                                 height: 20
                                 width: catTagText.implicitWidth + 12
                                 radius: 10
-                                color: (launcherRoot.selectedIndex === index) ? Color.md3.primary : Color.md3.surface_container_high
+                                color: isSelected ? Color.md3.primary : Color.md3.surface_container_high
 
                                 Text {
                                     id: catTagText
@@ -637,7 +645,7 @@ Item {
                                     font.family: "Jetbrains Mono Nerd Font Propo"
                                     font.pixelSize: 9
                                     font.bold: true
-                                    color: (launcherRoot.selectedIndex === index) ? Color.md3.on_primary : Color.md3.on_surface_variant
+                                    color: isSelected ? Color.md3.on_primary : Color.md3.on_surface_variant
                                 }
                             }
                         }
@@ -652,39 +660,6 @@ Item {
                         }
                     }
                 }
-            }
-        }
-
-        // --- FOOTER HINTS ---
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 14
-
-            RowLayout {
-                spacing: 4
-                Text { text: "↑ ↓ ← →"; font.family: "Jetbrains Mono Nerd Font Propo"; font.pixelSize: 10; font.bold: true; color: Color.md3.primary }
-                Text { text: "Navigate"; font.family: "Jetbrains Mono Nerd Font Propo"; font.pixelSize: 10; color: Color.md3.on_surface_variant }
-            }
-
-            RowLayout {
-                spacing: 4
-                Text { text: "↵"; font.family: "Jetbrains Mono Nerd Font Propo"; font.pixelSize: 10; font.bold: true; color: Color.md3.primary }
-                Text { text: "Launch"; font.family: "Jetbrains Mono Nerd Font Propo"; font.pixelSize: 10; color: Color.md3.on_surface_variant }
-            }
-
-            RowLayout {
-                spacing: 4
-                Text { text: "Esc"; font.family: "Jetbrains Mono Nerd Font Propo"; font.pixelSize: 10; font.bold: true; color: Color.md3.primary }
-                Text { text: "Close"; font.family: "Jetbrains Mono Nerd Font Propo"; font.pixelSize: 10; color: Color.md3.on_surface_variant }
-            }
-
-            Item { Layout.fillWidth: true }
-
-            Text {
-                text: launcherRoot.filteredApps.length + " Apps"
-                font.family: "Jetbrains Mono Nerd Font Propo"
-                font.pixelSize: 10
-                color: Color.md3.on_surface_variant
             }
         }
     }
