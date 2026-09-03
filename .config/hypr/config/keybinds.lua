@@ -17,11 +17,11 @@ local home = os.getenv("HOME")
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd(home .. "/.config/hypr/scripts/wlogout.sh"))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(v.fileManager))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + T", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(home .. "/.local/bin/wallpaper-picker.sh"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
-hl.bind(mainMod .. " + N", hl.dsp.exec_cmd(editor))
+hl.bind(mainMod .. " + C", hl.dsp.exec_cmd(editor))
 hl.bind(mainMod .. " + U", hl.dsp.window.pseudo()) -- dwindle pseudo-tile
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
@@ -33,7 +33,7 @@ hl.bind(mainMod .. " + CTRL + R", hl.dsp.exec_cmd(home .. "/.config/waybar/scrip
 
 -- ── Clipboard / screenshot / colour picker ───────────────────────
 hl.bind(mainMod .. " + CTRL + ALT + V", hl.dsp.exec_cmd("cliphist wipe"))
-hl.bind(mainMod .. " + P", hl.dsp.exec_cmd('hyprshot -m region --raw | satty --filename -'))
+hl.bind(mainMod .. " + P", hl.dsp.exec_cmd('grim -g "$(slurp)" - | satty --filename - --copy-command wl-copy'))
 hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("hyprpicker -an"))
 
 -- ── Rofi & utility scripts ───────────────────────────────────────
@@ -137,7 +137,7 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 
 -- ── Layout Switching ─────────────────────────────────────────────
 hl.bind(mainMod .. " + Y", function()
-	local layouts = { "scrolling", "dwindle" }
+	local layouts = { "scrolling", "dwindle", "master" }
 	local workspace = hl.get_active_workspace()
 	if hl.get_active_special_workspace() then
 		workspace = hl.get_active_special_workspace()
