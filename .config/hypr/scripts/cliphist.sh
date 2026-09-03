@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
+
+if pgrep -x "quickshell" > /dev/null; then
+    quickshell ipc call qsIpc toggleClipboardHistory
+    exit 0
+fi
+
 # Directory to store temporary image previews
 cache_dir="/tmp/cliphist_preview"
 mkdir -p "$cache_dir"
-
-# 1. Get the list from cliphist
-# 2. Loop through the top 50 items (limit for performance)
-# 3. Check if it is an image -> Decode to tmp file -> Print with icon
-# 4. Pipe everything to rofi
 
 cliphist list | head -n 50 | while read -r line; do
     # Extract the ID (first column)
