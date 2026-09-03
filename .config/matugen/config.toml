@@ -13,6 +13,15 @@ input_path = '~/.config/matugen/templates/kitty-colors.conf'
 output_path = '~/.config/kitty/colors.conf'
 post_hook = "pkill -SIGUSR1 kitty"
 
+[templates.alacritty]
+input_path = '~/.config/matugen/templates/alacritty.toml'
+output_path = '~/.config/alacritty/colors.toml'
+
+[templates.neovim]
+input_path = "~/.config/matugen/templates/nvim-colors.json"
+output_path = "~/.cache/matugen/nvim-colors.json"
+post_hook = "pkill -SIGUSR1 nvim"
+
 [templates.vscode-raw]
 input_path = './templates/vscode-colors'
 output_path = '~/.cache/matugen/vscode-colors'
@@ -56,6 +65,10 @@ output_path = '~/.config/wlogout/colors.css'
 input_path = '~/.config/matugen/templates/vesktop-midnight.css'
 output_path = '~/.config/vesktop/themes/colors.css'
 
+[templates.obsidian]
+input_path = '~/.config/matugen/templates/obsidian.css'
+output_path = '~/Documents/Obsidian Vault/.obsidian/snippets/matugen.css'
+
 [templates.btop]
 input_path = '~/.config/matugen/templates/btop.theme'
 output_path = '~/.config/btop/themes/matugen.theme'
@@ -92,6 +105,10 @@ compare_to = "{{ colors.primary.default.hex }}"
 post_hook = 'papirus-folders -t Papirus-Dark -C {{ closest_color }} -u'
 index = 1
 
+[templates.opencode]
+input_path = '~/.config/matugen/templates/opencode-colors.json'
+output_path = '~/.config/opencode/themes/matugen.json'
+
 [templates.quickshell]
 input_path = '~/.config/matugen/templates/quickshell.json'
 output_path = '~/.local/state/quickshell/generated/colors.json'
@@ -109,17 +126,7 @@ output_path = '~/.config/Kvantum/matugen/matugen.kvconfig'
 input_path = './templates/kvantum-colors.svg'
 output_path = '~/.config/Kvantum/matugen/matugen.svg'
 
-### Browsers, uncomment whatever browser in use. ###
-
-# [templates.vivaldi]
-# input_path = '~/.config/matugen/templates/vivaldi.css'
-# output_path = '~/.local/share/vivaldiCSS/colors.css'
-
-# [templates.pywalfox]
-# input_path = '~/.config/matugen/templates/pywalfox.json'
-# output_path = '~/.cache/wal/colors.json'
-# post_hook = 'pywalfox update'
-
-# [templates.firefox-website-colors]
-# input_path = "~/.config/matugen/templates/firefox-colors.css"
-# output_path = "~/.config/mozilla/firefox/43cz52bg.default-release/chrome/colors.css"
+[templates.pywalfox]
+input_path = '~/.config/matugen/templates/pywalfox.json'
+output_path = '~/.cache/wal/colors.json'
+post_hook = 'pywalfox update'
